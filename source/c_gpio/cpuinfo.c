@@ -55,6 +55,17 @@ get_cpuinfo_revision(char *revision_hex)
     }
     fclose(fp);
 
+    if ((fp = fopen("/proc/device-tree/model", "r")) == NULL)
+	return -1;
+
+    while(!feof(fp)) {
+	    fgets(buffer, sizeof(buffer) , fp);
+	    sscanf(buffer, "Raspberry Pi %s", hardware);
+    }
+    fclose(fp);
+
+    if (strcmp(hardware, "3") == 0)
+	return 3;
     if (!rpi_found) {
         revision_hex = NULL;
         return 0;
